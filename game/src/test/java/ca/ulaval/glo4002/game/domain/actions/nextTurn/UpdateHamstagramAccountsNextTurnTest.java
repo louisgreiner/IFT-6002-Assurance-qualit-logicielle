@@ -1,0 +1,51 @@
+package ca.ulaval.glo4002.game.domain.actions.nextTurn;
+
+import ca.ulaval.glo4002.game.domain.actions.GameVisitor;
+import ca.ulaval.glo4002.game.domain.character.Characters;
+import ca.ulaval.glo4002.game.domain.character.Chinchilla;
+import ca.ulaval.glo4002.game.domain.character.Hamster;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+
+class UpdateHamstagramAccountsNextTurnTest {
+    private Hamster hamsterMock;
+    private Chinchilla chinchillaMock;
+    private Characters charactersMock;
+    private UpdateHamstagramAccountsNextTurn updateHamstagramAccountsNextTurn;
+
+    @BeforeEach
+    void initUpdateHamstagramAccountsNextTurn() {
+        updateHamstagramAccountsNextTurn = new UpdateHamstagramAccountsNextTurn();
+    }
+
+    @BeforeEach
+    void initCharacterMock() {
+        hamsterMock = mock(Hamster.class);
+        chinchillaMock = mock(Chinchilla.class);
+        charactersMock = mock(Characters.class);
+    }
+
+    @Test
+    void whenAccept_thenCallVisit() {
+        GameVisitor gameVisitorMock = mock(GameVisitor.class);
+
+        updateHamstagramAccountsNextTurn.accept(gameVisitorMock);
+
+        verify(gameVisitorMock).visit(updateHamstagramAccountsNextTurn);
+    }
+
+    @Test
+    void whenExecute_thenHamstagramAccountsAreUpdated() {
+        when(charactersMock.getListOf(Hamster.class)).thenReturn(List.of(hamsterMock));
+        when(charactersMock.getListOf(Chinchilla.class)).thenReturn(List.of(chinchillaMock));
+
+        updateHamstagramAccountsNextTurn.execute(charactersMock);
+
+        verify(hamsterMock).updateHamstagramAccountsNextTurn();
+        verify(chinchillaMock).updateHamstagramAccountsNextTurn();
+    }
+}
